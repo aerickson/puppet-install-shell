@@ -510,8 +510,14 @@ case $platform in
       "ubuntu")
         info "Ubuntu platform! Lets get you a DEB..."
         if [ -n "${deb_codename+1}" ]; then
-	  echo "using deb_codename from /etc/lsb-release"
-	else
+          echo "using deb_codename from /etc/lsb-release"
+          case $deb_codename in
+            # workaround for https://tickets.puppetlabs.com/browse/PA-3840
+            # no jammy arm64 packages yet, focal ones work
+            # should be fine for non-arm64 OSs also...?
+            "jammy") deb_codename="focal";;
+          esac
+        else
           case $platform_version in
             "18.04") deb_codename="bionic";;
             "20.04") deb_codename="focal";;
