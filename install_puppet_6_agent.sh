@@ -102,6 +102,7 @@ os=`uname -s`
 if test -f "/etc/lsb-release" && grep -q DISTRIB_ID /etc/lsb-release; then
   platform=`grep DISTRIB_ID /etc/lsb-release | cut -d "=" -f 2 | tr '[A-Z]' '[a-z]'`
   platform_version=`grep DISTRIB_RELEASE /etc/lsb-release | cut -d "=" -f 2`
+  deb_codename=`grep DISTRIB_CODENAME /etc/lsb-release | cut -d "=" -f 2`
 elif test -f "/etc/debian_version"; then
   platform="debian"
   platform_version=`cat /etc/debian_version`
@@ -512,21 +513,25 @@ case $platform in
         ;;
       "ubuntu")
         info "Ubuntu platform! Lets get you a DEB..."
-        case $platform_version in
-          "12.04") deb_codename="precise";;
-          "12.10") deb_codename="quantal";;
-          "13.04") deb_codename="raring";;
-          "13.10") deb_codename="saucy";;
-          "14.04") deb_codename="trusty";;
-          "15.04") deb_codename="vivid";;
-          "15.10") deb_codename="wily";;
-          "16.04") deb_codename="xenial";;
-          "16.10") deb_codename="yakkety";;
-          "17.04") deb_codename="zesty";;
-          "18.04") deb_codename="bionic";;
-          "20.04") deb_codename="focal";;
-          "14.10") utopic;;
-        esac
+	    if [ -n "${deb_codename+1}" ]; then
+	      echo "using deb_codename from /etc/lsb-release"
+	    else
+          case $platform_version in
+            "12.04") deb_codename="precise";;
+            "12.10") deb_codename="quantal";;
+            "13.04") deb_codename="raring";;
+            "13.10") deb_codename="saucy";;
+            "14.04") deb_codename="trusty";;
+            "15.04") deb_codename="vivid";;
+            "15.10") deb_codename="wily";;
+            "16.04") deb_codename="xenial";;
+            "16.10") deb_codename="yakkety";;
+            "17.04") deb_codename="zesty";;
+            "18.04") deb_codename="bionic";;
+            "20.04") deb_codename="focal";;
+            "14.10") utopic;;
+          esac
+	    fi
         filetype="deb"
         filename="puppet6-release-${deb_codename}.deb"
         download_url="http://apt.puppetlabs.com/${filename}"
