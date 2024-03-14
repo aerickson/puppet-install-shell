@@ -442,6 +442,13 @@ install_file() {
     "deb")
       info "installing puppetlabs apt repo with dpkg..."
       dpkg -i "$2"
+      # 1804 fix for /etc/apt/trusted.key.d deprecation
+      if "$version" == 7; then
+        # run `sed` to replace `deb http://apt.puppet.com bionic puppet7` with 
+        # `deb [signed-by=/etc/apt/trusted.gpg.d/puppet7-keyring.gpg] http://apt.puppet.com bionic puppet7` 
+        # in the /etc/apt/sources.list.d/puppet7-release.list file
+        sed -i 's/^deb /deb [signed-by=\/etc\/apt\/trusted.gpg.d\/puppet7-keyring.gpg] /g' /etc/apt/sources.list.d/puppet7-release.list
+      fi
       apt-get update -y
       apt-get install apt-transport-https ca-certificates -y
       if test "$version" = 'latest'; then
@@ -452,13 +459,6 @@ install_file() {
         else
           apt-get install -y "puppet-agent=${version}"
         fi
-      fi
-      # 1804 fix for /etc/apt/trusted.key.d deprecation
-      if "$version" == 7; then
-        # run `sed` to replace `deb http://apt.puppet.com bionic puppet7` with 
-        # `deb [signed-by=/etc/apt/trusted.gpg.d/puppet7-keyring.gpg] http://apt.puppet.com bionic puppet7` 
-        # in the /etc/apt/sources.list.d/puppet7-release.list file
-        sed -i 's/^deb /deb [signed-by=\/etc\/apt\/trusted.gpg.d\/puppet7-keyring.gpg] /g' /etc/apt/sources.list.d/puppet7-release.list
       fi
       ;;
     "solaris")
