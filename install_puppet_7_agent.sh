@@ -510,7 +510,7 @@ case $platform in
       "ubuntu")
         info "Ubuntu platform! Lets get you a DEB..."
         if [ -n "${deb_codename+1}" ]; then
-          echo "using deb_codename from /etc/lsb-release"
+          info "using deb_codename from /etc/lsb-release"
           case $deb_codename in
             # workaround for https://tickets.puppetlabs.com/browse/PA-3840
             # no jammy arm64 packages yet, focal ones work
