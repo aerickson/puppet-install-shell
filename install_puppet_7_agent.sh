@@ -443,7 +443,8 @@ install_file() {
       info "installing puppetlabs apt repo with dpkg..."
       dpkg -i "$2"
       # 1804 fix for /etc/apt/trusted.key.d deprecation
-      if "$version" == 7; then
+      if test "$version" = 'latest'; then
+        echo "running SED fix for 1804..."
         # run `sed` to replace `deb http://apt.puppet.com bionic puppet7` with 
         # `deb [signed-by=/etc/apt/trusted.gpg.d/puppet7-keyring.gpg] http://apt.puppet.com bionic puppet7` 
         # in the /etc/apt/sources.list.d/puppet7-release.list file
